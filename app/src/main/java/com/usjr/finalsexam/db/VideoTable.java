@@ -125,17 +125,24 @@ public class VideoTable {
 
     public static List<Video> getAllVideos(Context context) {
         List<Video> videos = new ArrayList<>();
-        SQLiteDatabase db = null;
+        SQLiteDatabase db = DbHandler.getInstance(context).getReadableDatabase();
         Cursor cursor = null;
 
         try {
             // TODO: Implement retrieval of all video items from the database
 
-            String select = "Select * from " + VideoEntry.TABLE_NAME;
-            cursor=db.rawQuery(select, null);
+//            String select = "Select * from " + VideoEntry.TABLE_NAME;
+            cursor=db.rawQuery(SELECT_QUERY, null);
+
             if(cursor.moveToFirst()){
                 do{
-                    Video vid = new Video(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+//                    Video vid = new Video(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+                    String id = cursor.getString(cursor.getColumnIndex(VideoEntry._ID));
+                    String title = cursor.getString(cursor.getColumnIndex(VideoEntry.COL_TITLE));
+                    String desc = cursor.getString(cursor.getColumnIndex(VideoEntry.COL_DESCRIPTION));
+                    String thumbnail = cursor.getString(cursor.getColumnIndex(VideoEntry.COL_THUMBNAIL_URL));
+                    Video video = new Video(id, title,desc,thumbnail);
+                    videos.add(video);
                 }while(cursor.moveToNext());
             }
 

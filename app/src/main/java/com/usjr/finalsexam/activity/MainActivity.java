@@ -35,9 +35,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mAdapter = new VideoListAdapter(this, new ArrayList<Video>());
 
         listView.setAdapter(mAdapter);
-
+        listView.setOnItemClickListener(this);
         prepareData();
         displayListOfVideos();
+        hideProgressBar();
     }
 
     private void prepareData() {
@@ -55,10 +56,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void displayListOfVideos() {
         // TODO: Implement this method
-
-
-
-
+        List<Video> videos = VideoTable.getAllVideos(getApplicationContext());
+        mAdapter.addAll(videos);
     }
 
     public void showProgressBar() {
@@ -74,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, PlayVideoActivity.class);
+        intent.putExtra("VID_ID", mAdapter.getItem(position).getId());
         startActivity(intent);
     }
 }
